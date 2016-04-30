@@ -26,69 +26,34 @@ int main(int argc, char **argv)
 
   int number=atoi(argv[1]);
 
+double x = 0;
+int state = 1;
 
+double h[3][4] = {{0.2,0.4,.0.1,0.3},{0.3,0.3,0.1,0.3},{0.1,0.2,0.1,0.6}}
+double a[3] = {1.5,-1.,0.7}
 
-double temp = 0;
-bool walk = true;
-  for (size_t i = 0; i < number;++i) {
-    double x;
-    int state = 3;
-    while (walk) {
-      double random = rand->Uniform(0,1);
-      //std::cout << random << std::endl;
-      if (state == 1) {
-        if (random <= 0.2) {
-          state = 1;
-        }
-        if (random > 0.2 && random <= 0.5 ) {
-          state = 2;
-        }
-        if (random > 0.5 && random <= 0.6 ) {
-          state = 3;
-        }
-        if(random > 0.6){
-          x = 1.5/0.4;
-          walk = false;
-        }
-      }
-      if (state == 2) {
-        if (random <= 0.4) {
-          state = 1;
-        }
-        if (random > 0.4 && random <= 0.7 ) {
-          state = 2;
-        }
-        if (random > 0.7 && random <= 0.9 ) {
-          state = 3;
-        }
-        if(random > 0.9){
-          x = (-1.)/0.1;
-          walk = false;
-        }
-      }
-      if (state == 3) {
-        if (random <= 0.3) {
-          state = 1;
-        }
-        if (random > 0.3 && random <= 0.4 ) {
-          state = 2;
-        }
-        if (random > 0.4 && random <= 0.5 ) {
-          state = 3;
-        }
-        if(random > 0.5){
-          x = 0.7/0.5;
-          walk = false;
-        }
-
-      }
-      //std::cout << state << std::endl;
+while (state != 3) {
+  double temp = 0;
+  double beforstate = state;
+  for (int i = 0; i < 4; i++) {
+    temp += h[state][i];
+    double r = rand->Uniform(0,1);
+    if (r < temp) {
+      state = i;
+      break;
     }
-    temp += x;
-    walk = true;
   }
+}
+state = beforstate;
 
-double calc = (double) temp/number;
+double x += a[state] / h[state][3]
+
+
+
+
+
+
+double calc = x
 
 std::cout << calc << std::endl;
 
