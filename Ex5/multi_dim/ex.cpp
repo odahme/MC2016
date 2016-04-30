@@ -22,25 +22,18 @@ int main(int argc, char **argv)
 
 std::cout << "start Programm; created and open file" << std::endl;
 
-ofstream phi_one_file;
-phi_one_file.open("phi_ones.txt");
-phi_one_file <<"Values for phi one first part of the histogramm \n";
 
-ofstream phi_twos_file;
-phi_twos_file.open("phi_twos.txt");
-phi_twos_file <<"Values for phi two second part of the histogramm \n";
-
-
-  int n_phis=100;
+  int n_phis=1000;
 
 //  TH1F * hist = new TH1F("hist", "hist", 100, -2, 20);
 
   std::cout << "E4.4 multi dimension test" << std::endl;
 
-  int dimstart = 10;
+  int dimstart = 5;
   int dim;
   int subdivisions = 3;
-  int number = 1000000;
+  int number = 100000;
+
 
   //double phismone[n_phis];
   //double phismtwo[n_phis];
@@ -49,19 +42,29 @@ phi_twos_file <<"Values for phi two second part of the histogramm \n";
   int hit;
 
 
-
+  ofstream phi_file;
 
   double calc;
 
   bool firstphi = true;
-for (size_t nphis = 0; nphis < 2; nphis++) {
+for (int nphis = 0; nphis < 2; nphis++) {
   if (nphis == 1) {
     firstphi = false;
   }
+
+  if (firstphi) {
+
+    phi_file.open("phi_ones.txt");
+    phi_file <<"Values for phi one first part of the histogramm \n";
+  }else{
+    //ofstream phi_twos_file;
+    phi_file.open("phi_twos.txt");
+    phi_file <<"Values for phi two second part of the histogramm \n";
+  }
+
   dim = dimstart - nphis;
 
   double hypercube[dim][number];
-
   int n_subhypercubs = pow(subdivisions,dim);
   int subhypercubesum[n_subhypercubs];
   double starts[dim];
@@ -134,15 +137,10 @@ std::cout << "initialisiation of boders completed" << std::endl;
     }
 //    std::cout << "writing phi " << k << std::endl;
 
-     if (firstphi) {
-       phi_one_file << phi << "\n" ;
-
-     }
-     else{
-       phi_twos_file << phi << "\n" ;
-       //std::cout << "second = "<<phi << std::endl;
-     }
+      phi_file << phi << "\n" ;
   }
+
+  phi_file.close();
 }
 
 // for (size_t k = 0; k < n_phis; k++) {
@@ -154,10 +152,6 @@ std::cout << "initialisiation of boders completed" << std::endl;
 double freedom = pow(subdivisions,dimstart) - pow(subdivisions,dimstart-1);
 
 std::cout << "degrees of freedom = "<< freedom << std::endl;
-
-
-phi_one_file.close();
-phi_twos_file.close();
 
 std::cout << "File closed; Programm terminated" << std::endl;
 
