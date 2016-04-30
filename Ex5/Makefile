@@ -26,7 +26,7 @@ OBJT2 = $(NAME2).o
 #EXEC1 = $(NAME1).x
 EXEC1 = $(NAME2).x
 # Nazwa i opcje kompilatora
-CXX = g++
+CXX = icpc
 # 1) Jawnie
 #CXXFLAGS = -O -Wall -pthread -I$(RPATH)include
 # 2) Przy uzyciu root-config

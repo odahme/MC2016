@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <TRandom3.h>
 #include <TH3F.h>
-//#include <omp.h>
+#include <omp.h>
 using namespace std;
 
 int main(int argc, char **argv)
@@ -20,11 +20,15 @@ int main(int argc, char **argv)
   // // create a canvas
   // TCanvas c1("c1","c1",1,1,1024,768);
 
+std::cout << "start Programm; created and open file" << std::endl;
+
 ofstream phi_one_file;
 phi_one_file.open("phi_ones.txt");
 phi_one_file <<"Values for phi one first part of the histogramm \n";
 
-
+ofstream phi_twos_file;
+phi_twos_file.open("phi_twos.txt");
+phi_twos_file <<"Values for phi two second part of the histogramm \n";
 
 
   int n_phis=100;
@@ -33,10 +37,10 @@ phi_one_file <<"Values for phi one first part of the histogramm \n";
 
   std::cout << "E4.4 multi dimension test" << std::endl;
 
-  int dimstart = 5;
+  int dimstart = 10;
   int dim;
   int subdivisions = 3;
-  int number = 100000;
+  int number = 1000000;
 
   //double phismone[n_phis];
   //double phismtwo[n_phis];
@@ -49,12 +53,12 @@ phi_one_file <<"Values for phi one first part of the histogramm \n";
 
   double calc;
 
-//  bool firstphi = true;
-//for (size_t nphis = 0; nphis < 2; nphis++) {
-//  if (nphis == 1) {
-//    firstphi = false;
-//  }
-  dim = dimstart; //-nphis
+  bool firstphi = true;
+for (size_t nphis = 0; nphis < 2; nphis++) {
+  if (nphis == 1) {
+    firstphi = false;
+  }
+  dim = dimstart - nphis;
 
   double hypercube[dim][number];
 
@@ -87,7 +91,7 @@ phi_one_file <<"Values for phi one first part of the histogramm \n";
     }
 std::cout << "initialisiation of boders completed" << std::endl;
 
-  #pragma omp for
+  #pragma omp parallel for
   for (int k = 0; k < n_phis; k++) {
     TRandom3 *rand = new TRandom3(k);
 
@@ -128,18 +132,18 @@ std::cout << "initialisiation of boders completed" << std::endl;
     for (int i = 0; i < n_subhypercubs; i++) {
       phi += pow(subhypercubesum[i] - (number - dim + 1)/n_subhypercubs,2)/((number - dim + 1) / n_subhypercubs);
     }
-    std::cout << "writing phi " << k << std::endl;
-    phi_one_file << phi << "\n" ;
-    // if (firstphi) {
-    //   phismone[k] = phi;
-    //
-    // }
-    // else{
-    //   phismtwo[k] = phi;
-    //   //std::cout << "second = "<<phi << std::endl;
-    // }
+//    std::cout << "writing phi " << k << std::endl;
+
+     if (firstphi) {
+       phi_one_file << phi << "\n" ;
+
+     }
+     else{
+       phi_twos_file << phi << "\n" ;
+       //std::cout << "second = "<<phi << std::endl;
+     }
   }
-//}
+}
 
 // for (size_t k = 0; k < n_phis; k++) {
 //   calc = phismone[k] - phismtwo[k];
@@ -153,6 +157,10 @@ std::cout << "degrees of freedom = "<< freedom << std::endl;
 
 
 phi_one_file.close();
+phi_twos_file.close();
+
+std::cout << "File closed; Programm terminated" << std::endl;
+
 //  hist->Draw();
   //turns off the program with mous clic
 //  theApp.Connect("TCanvas","Closed()","TApplication",&theApp,"Terminate()");
