@@ -32,7 +32,7 @@ double x[3] = {0,0,0};
 double h[3][4] = {{0.2,0.4,0.1,0.3},{0.3,0.3,0.1,0.3},{0.1,0.2,0.1,0.6}};
 double a[3] = {1.5,-1.0,0.7};
 
-for (size_t i = 0; i < number; i++) {
+for (int i = 0; i < number; i++) {
   double q = rand->Uniform(0,1);
   int state = -1;
   double prob = 0;
@@ -41,23 +41,25 @@ for (size_t i = 0; i < number; i++) {
     prob += 1./3;
   }
 
-  int beforstate = state;
+  int beforstate;
   int startstate = state;
+  double temp;
+
   while (state != 3) {
-    double temp = 0;
+    double r = rand->Uniform(0,1);
+    temp = 0;
     beforstate = state;
-    for (int i = 0; i < 4; i++) {
-      temp += h[state][i];
-      double r = rand->Uniform(0,1);
+    for (int j = 0; j < 4; j++) {
+      temp += h[state][j];
       if (r < temp) {
-        state = i;
+        state = j;
         break;
       }
     }
   }
   state = beforstate;
-
-   x[startstate] += 3*a[state] / h[state][3];
+  std::cout << state << std::endl;
+  x[startstate] += 3*a[state] / h[state][3];
 }
 
 for (size_t i = 0; i < 3; i++) {
