@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 //  TApplication theApp("demoApplication",&argc,argv);
   // create a canvas
 //  TCanvas c1("c1","c1",1,1,1024,768);
-  TRandom3 *rand = new TRandom3(123);
+  TRandom3 *rand = new TRandom3();
 
   int number=atoi(argv[1]);
 
@@ -41,13 +41,11 @@ for (int i = 0; i < number; i++) {
     prob += 1./3;
   }
 
-  int beforstate;
+  int beforstate = state;
   int startstate = state;
-  double temp;
-
   while (state != 3) {
     double r = rand->Uniform(0,1);
-    temp = 0;
+    double temp = 0;
     beforstate = state;
     for (int j = 0; j < 4; j++) {
       temp += h[state][j];
@@ -58,12 +56,11 @@ for (int i = 0; i < number; i++) {
     }
   }
   state = beforstate;
-  std::cout << state << std::endl;
-  x[startstate] += 3*a[state] / h[state][3];
+  x[state] += a[startstate] / h[state][3];
 }
 
-for (size_t i = 0; i < 3; i++) {
-  x[i] = x[i]/number;
+for (int i = 0; i < 3; i++) {
+  x[i] = 3*x[i]/number;
   std::cout << x[i] << std::endl;
 }
 
